@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/nav_sec1">
+        <menu>
+            <item
+                android:id="@+id/nav_task_new"
+                android:icon="@drawable/ic_add"
+                android:title="@string/opc_new" />
+            <item
+                android:id="@+id/nav_task_view"
+                android:icon="@drawable/ic_view"
+                android:title="@string/opc_view" />
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_sec2">
+        <menu>
+            <item
+                android:id="@+id/nav_event_new"
+                android:icon="@drawable/ic_add"
+                android:title="@string/opc_new" />
+            <item
+                android:id="@+id/nav_event_view"
+                android:icon="@drawable/ic_view"
+                android:title="@string/opc_view" />
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_sec3">
+        <menu>
+            <item
+                android:id="@+id/nav_profile_view"
+                android:icon="@drawable/ic_view"
+                android:title="@string/opc_view" />
+            <item
+                android:id="@+id/nav_profile_edit"
+                android:icon="@drawable/ic_edit"
+                android:title="@string/opc_edit" />
+        </menu>
+    </item>
+
+</menu>

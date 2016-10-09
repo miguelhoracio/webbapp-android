@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Webbapp</string>
+    <string name="action_settings">Configuración</string>
+    <string name="action_sign_in">Iniciar</string>
+    <string name="action_sign_in_short">Iniciar</string>
+    <string name="bad_url">Url incorrecto</string>
+    <string name="error_field_required">Campo requerido</string>
+    <string name="error_invalid_email">Email invalido</string>
+    <string name="error_invalid_password">Contraseña invalida</string>
+    <string name="nav_sec1">Asignaciones</string>
+    <string name="nav_sec2">Actividades</string>
+    <string name="nav_sec3">Perfil</string>
+    <string name="navigation_drawer_close"></string>
+    <string name="no_internet">No internet</string>
+    <string name="opc_edit">Editat</string>
+    <string name="opc_new">Añadir</string>
+    <string name="opc_view">Ver</string>
+    <string name="prompt_email">Correo</string>
+    <string name="prompt_password">Password</string>
+</resources>
