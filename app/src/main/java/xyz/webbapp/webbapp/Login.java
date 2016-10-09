@@ -205,6 +205,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
         private final String Url = "http://www.sergiocruz.xyz/webbapp/login.php";
         private final String mEmail;
         private final String mPassword;
+        private final int test;
 
         UserLoginTask(Context context, String email, String password)
         {
