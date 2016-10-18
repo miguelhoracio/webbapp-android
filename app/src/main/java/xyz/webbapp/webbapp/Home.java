@@ -15,8 +15,15 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * Descripcion: Tendra la vista favorita del usuario, base para las demas vistas.
+ * Autor: Sergio Cruz
+ * Fecha: 2016-10-08
+ **/
+
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
+    // TODO: Implementar logica para la vista favorita
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -37,8 +44,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -47,13 +53,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         TextView data = (TextView) findViewById(R.id.data);
 
-        //Obtiene informacion de l Intent que mando a llamar esta actividad.
+        //Obtiene informacion de el Intent que mando a llamar esta actividad.
         Bundle b = getIntent().getExtras();
         if(b != null)
         {
             String text = b.getString("webData");
-            data.setText(text);
+            if(text != null)
+            {
+                data.setText(text);
+            }
         }
+
+        //TODO: En teoria solo login mandaria webData asegurarse de esto
 
     }
 
@@ -61,9 +72,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void onBackPressed()
     {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START))
+        {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else
+        {
             super.onBackPressed();
         }
     }
@@ -85,7 +99,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings)
+        {
             return true;
         }
 
@@ -96,7 +111,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
     {
-        // Handle navigation view item clicks here.
+        //  TODO: Mandar a llamar las clases correspondientes cuando se haga click en la opcion
         int id = item.getItemId();
 
         switch (id)

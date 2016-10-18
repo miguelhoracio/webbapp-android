@@ -16,27 +16,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- * Descripcion: Login de la Aplicacion
+ * Descripcion: Activity de log in de la aplicacion
  * Autor: Sergio Cruz
  * Fecha: 2016-10-08
- */
+ **/
 
 public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
 {
@@ -49,26 +49,18 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Se liga la vista
+
         setContentView(R.layout.activity_login);
-        // Set up the login form.
+
+        // Se instancian los controles
+
         mEmailView = (EditText) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent)
-            {
-                if (id == R.id.login || id == EditorInfo.IME_NULL)
-                {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener()
+        Button btnLogIn = (Button) findViewById(R.id.email_sign_in_button);
+        btnLogIn.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -83,48 +75,53 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
 
     // Intenta validar al usuario
 
-    private void attemptLogin() {
-
-        if (mAuthTask != null) {
+    private void attemptLogin()
+    {
+        if (mAuthTask != null)
+        {
             return;
         }
 
-        // Reset errors.
+        // Resetea los controles
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
-        // Store values at the time of the login attempt.
+        // Obtiene los valores de los controles
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        // Validala contraseña
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password))
+        {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        // Valida el correo
+        if (TextUtils.isEmpty(email))
+        {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        }
+        else if (!isEmailValid(email))
+        {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
+            // Si hay un error en la validacion de la contraseña no se intenta logear
             focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+        }
+        else
+        {
+            // Se muestra el spinner mientras se crea la asynctask para traer la informacion del server
             showProgress(true);
             mAuthTask = new UserLoginTask(this, email, password);
             mAuthTask.execute();
@@ -132,12 +129,13 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+        //TODO: Logica del correo
         return email.contains("@");
     }
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
+    private boolean isPasswordValid(String password)
+    {
+        //TODO: Logica de la contraseña
         return password.length() > 4;
     }
 
@@ -161,8 +159,8 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
             });
 
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter()
+            {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -171,8 +169,7 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
         }
         else
         {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
+            // Si la version de android no soporta la animacion solo se oculta y muestra lo que importa.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
@@ -197,15 +194,17 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
      * Descripcion: Valida a el usuario y se trae la informacion del webservice.
      * Autor: Sergio Cruz
      * Fecha: 2016-10-08
-     */
+     **/
 
-    public class UserLoginTask extends AsyncTask<Void, Void, String> {
-
+    // Las asynctask tienen preexecute, execute (doInBackground) y postexecute, se pasan sus returns
+    public class UserLoginTask extends AsyncTask<Void, Void, String>
+    {
         private Context myContext;
-        private final String Url = "http://www.sergiocruz.xyz/webbapp/login.php";
+        private final String Url = "http://www.webbapp.xyz/service.php";
         private final String mEmail;
         private final String mPassword;
 
+        //Constructor
         UserLoginTask(Context context, String email, String password)
         {
             myContext = context;
@@ -219,8 +218,9 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
 
             String result = "";
 
-            ConnectivityManager connMgr = (ConnectivityManager)
-                    getSystemService(Context.CONNECTIVITY_SERVICE);
+            // Se valida que haya internet
+
+            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
@@ -254,7 +254,6 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
             }
 
             return result;
-
         }
 
         @Override
@@ -263,21 +262,17 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
             mAuthTask = null;
             showProgress(false);
 
+            // Si doInBackground obtuvo informacion se pasa a la actividad home
             if (!data.isEmpty())
             {
+                // Con putExtra pasamos info en el intent
                 Intent intent = new Intent(myContext, Home.class);
                 intent.putExtra("webData", data);
                 startActivity(intent);
-
-            } else {
-
-                runOnUiThread(new Runnable()
-                {
-                    public void run()
-                    {
-                        Toast.makeText(myContext, data, Toast.LENGTH_SHORT).show();
-                    }
-                });
+            }
+            else
+            {
+                Toast.makeText(myContext, R.string.no_data, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -288,32 +283,60 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
             showProgress(false);
         }
 
+
+        //Se conecta al webservice e intenta obtener la info del usuario
+
         protected String validateUser(String myurl) throws IOException
         {
             InputStream is = null;
-            int len = 5000;
 
             try
             {
                 URL url = new URL(myurl);
+                Map<String, Object> parametros = new LinkedHashMap<>();
+                parametros.put("request", "login");
+                parametros.put("email", this.mEmail);
+                parametros.put("pwd", this.mPassword);
+                StringBuilder postData = new StringBuilder();
+
+                for (Map.Entry<String,Object> param : parametros.entrySet())
+                {
+                    if (postData.length() != 0)
+                    {
+                        postData.append('&');
+                    }
+                    postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                    postData.append('=');
+                    postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+                }
+
+                // Despues de que se hace el request se convierte a bytes, y se manda su length
+
+                byte[] postDataBytes = postData.toString().getBytes("UTF-8");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(10000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);
                 conn.setRequestMethod("POST");
                 conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestProperty( "charset", "utf-8");
+                conn.setRequestProperty( "Content-Length", String.valueOf(postDataBytes.length));
+                conn.getOutputStream().write(postDataBytes);
                 Log.d("TAG", conn.getOutputStream().toString());
-                // Starts the query
+
+                // Se inicia la conexion
                 conn.connect();
+
                 int response = conn.getResponseCode();
-                Log.d("TAG", "The response is: " + response);
+                Log.d("TAG", "The response is: " + response); // 200 es conexion correcta
                 is = conn.getInputStream();
 
-                // Convert the InputStream into a string
-                String contentAsString = readIt(is, len);
+                // readIt convierte el input stream a string
+                String contentAsString = readIt(is);
                 return contentAsString;
 
-                // Makes sure that the InputStream is closed after the app is
-                // finished using it.
+             // Se cierra la conexion
             }
             finally
             {
@@ -325,13 +348,17 @@ public class Login extends AppCompatActivity implements LoaderCallbacks<Cursor>
         }
 
         //Lee el input stream y lo regresa como string.
-        protected String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException
+        protected String readIt(InputStream stream) throws IOException
         {
-            Reader reader;
-            reader = new InputStreamReader(stream, "UTF-8");
-            char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader;
+            reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+            String input = "";
+            while((input = reader.readLine()) != null)
+            {
+                sb.append(input);
+            }
+            return sb.toString();
         }
     }
 }

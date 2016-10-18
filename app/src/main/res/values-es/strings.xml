@@ -11,11 +11,11 @@
     <string name="nav_sec1">Asignaciones</string>
     <string name="nav_sec2">Actividades</string>
     <string name="nav_sec3">Perfil</string>
-    <string name="navigation_drawer_close"></string>
     <string name="no_internet">No internet</string>
     <string name="opc_edit">Editat</string>
     <string name="opc_new">Añadir</string>
     <string name="opc_view">Ver</string>
     <string name="prompt_email">Correo</string>
     <string name="prompt_password">Password</string>
+    <string name="no_data">No hay datos en el servidor</string>
 </resources>
